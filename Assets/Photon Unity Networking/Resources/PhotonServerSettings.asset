@@ -51,4 +51,6 @@ MonoBehaviour:
   - DestroySelf
   - FlipX
   - ReduceHealth
+  - Dead
+  - Respawn
   DisableAutoOpenWizard: 1

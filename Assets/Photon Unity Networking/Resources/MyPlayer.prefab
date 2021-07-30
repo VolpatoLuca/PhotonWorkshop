@@ -220,6 +220,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 777a909642a4181439e14ccb2da79689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
+  rb: {fileID: 0}
+  sr: {fileID: 0}
+  bc: {fileID: 0}
   moveSpeed: 4
   jumpForce: 10
   fireRate: 3
@@ -373,7 +377,7 @@ MonoBehaviour:
     TeleportIfDistanceGreaterThan: 3
     InterpolateOption: 4
     InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 4
+    InterpolateLerpSpeed: 6
     InterpolateMoveTowardsAcceleration: 2
     InterpolateMoveTowardsDeceleration: 2
     InterpolateSpeedCurve:
@@ -465,6 +469,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthImage: {fileID: 2581454133765052992}
+  playerCanvas: {fileID: 6817922641337659531}
+  healthAmount: 100
 --- !u!114 &118213606427141798
 MonoBehaviour:
   m_ObjectHideFlags: 0

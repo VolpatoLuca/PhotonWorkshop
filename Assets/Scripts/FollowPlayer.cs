@@ -15,7 +15,16 @@ public class FollowPlayer : MonoBehaviour
 
     private void LateUpdate()
     {
-        Vector3 newPos = Vector3.Lerp(transform.position, player.transform.position + offset, 6 * Time.deltaTime);
-        transform.position = newPos;
+        if (!player)
+        {
+            print("A");
+            Destroy(gameObject);
+        }
+        else
+        {
+            Vector3 newPos = Vector3.Lerp(transform.position, player.transform.position + offset, 6 * Time.deltaTime);
+            transform.position = newPos;
+
+        }
     }
 }

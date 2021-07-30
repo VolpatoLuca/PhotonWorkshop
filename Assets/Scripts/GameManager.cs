@@ -5,6 +5,14 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
+    [HideInInspector] public GameObject localPlayer;
+    public TMP_Text respawnTimerText;
+    public GameObject respawnMenu;
+    private float timerAmount = 5f;
+    private bool runSpawnTimer = false;
+
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject spawnCanvas;
     [SerializeField] private GameObject mainCamera;
@@ -16,6 +24,14 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
         spawnCanvas.SetActive(true);
     }
 
@@ -28,11 +44,37 @@ public class GameManager : MonoBehaviour
         {
             disconnectCanvas.SetActive(!disconnectCanvas.activeSelf);
         }
+
+        if (runSpawnTimer)
+        {
+            StartRespawn();
+        }
+    }
+
+    public void EnableRespawn()
+    {
+        timerAmount = 5;
+        runSpawnTimer = true;
+        respawnMenu.SetActive(true);
+    }
+
+    private void StartRespawn()
+    {
+        timerAmount -= Time.deltaTime;
+        respawnTimerText.text = "Respawning in " + timerAmount.ToString("F0");
+
+        if (timerAmount <= 0)
+        {
+            respawnMenu.SetActive(false);
+            runSpawnTimer = false;
+            localPlayer.GetComponent<PhotonView>().RPC("Respawn", PhotonTargets.AllBuffered);
+            localPlayer.transform.position = new Vector2(Random.Range(-5, 5), 3);
+        }
     }
 
     public void SpawnPlayer()
     {
-        Vector2 randomPos = new Vector2(Random.Range(-3f, 3f), 5);
+        Vector2 randomPos = new Vector2(Random.Range(-5f, 5f), 5);
         PhotonNetwork.Instantiate(playerPrefab.name, randomPos, Quaternion.identity, 0);
         spawnCanvas.SetActive(false);
         mainCamera.SetActive(false);

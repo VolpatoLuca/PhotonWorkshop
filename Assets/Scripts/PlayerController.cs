@@ -6,8 +6,11 @@ using UnityEngine;
 
 public class PlayerController : Photon.MonoBehaviour
 {
-    private Rigidbody2D rb;
-    private SpriteRenderer sr;
+    public bool isDead;
+
+    [HideInInspector] public Rigidbody2D rb;
+    [HideInInspector] public SpriteRenderer sr;
+    [HideInInspector] public BoxCollider2D bc;
     private Animator anim;
     private bool isGrounded;
     [SerializeField] private float moveSpeed = 4f;
@@ -33,6 +36,7 @@ public class PlayerController : Photon.MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
+        bc = GetComponent<BoxCollider2D>();
         if (photonView.isMine)
         {
             cam.SetActive(true);
@@ -49,10 +53,10 @@ public class PlayerController : Photon.MonoBehaviour
     {
         if (photonView.isMine)
         {
-            isGrounded = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f, 1<<LayerMask.NameToLayer("Ground")).Length != 0;
+            isGrounded = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f, 1 << LayerMask.NameToLayer("Ground")).Length != 0;
             if (isGrounded)
                 canDoubleJump = true;
-            else if(!isFiring && !isAirborne)
+            else if (!isFiring && !isAirborne)
             {
                 isAirborne = true;
                 anim.SetTrigger("StartJump");
@@ -63,7 +67,8 @@ public class PlayerController : Photon.MonoBehaviour
                 anim.SetTrigger("EndJump");
             }
 
-            GetInputs();
+            if (!isDead)
+                GetInputs();
 
             Jump();
             Fire();
@@ -73,7 +78,7 @@ public class PlayerController : Photon.MonoBehaviour
     private void Jump()
     {
         if (jumpInput && (isGrounded || canDoubleJump))
-        { 
+        {
             if (!isGrounded)
                 canDoubleJump = false;
             Vector2 vel = Vector2.zero;
@@ -94,7 +99,7 @@ public class PlayerController : Photon.MonoBehaviour
             fireTimer += Time.deltaTime;
             if (fireTimer >= 1 / fireRate)
             {
-               
+
                 fireTimer = 0;
                 Vector3 spawnPos = sr.flipX ? leftSpawnPos.position : rightSpawnPos.position;
                 GameObject o = PhotonNetwork.Instantiate(projectilePrefab.name, spawnPos, Quaternion.identity, 0);

@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initForce: 6.5
-  damageAmount: 0.1
+  damageAmount: 10
 --- !u!114 &4495790791578413341
 MonoBehaviour:
   m_ObjectHideFlags: 0

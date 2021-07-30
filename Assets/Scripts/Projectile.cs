@@ -21,19 +21,14 @@ public class Projectile : Photon.MonoBehaviour
         {
             rb.velocity = Vector2.left * initForce;
         }
-        StartCoroutine(DestroyByTime());
+        if (photonView.isMine)
+            StartCoroutine(DestroyByTime());
     }
 
     private IEnumerator DestroyByTime()
     {
         yield return new WaitForSeconds(4f);
-        photonView.RPC("DestroySelf", PhotonTargets.AllBuffered);
-    }
-
-    [PunRPC]
-    private void DestroySelf()
-    {
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
     }
 
     [PunRPC]
@@ -54,9 +49,7 @@ public class Projectile : Photon.MonoBehaviour
             {
                 target.RPC("ReduceHealth", PhotonTargets.AllBuffered, damageAmount);
             }
-            photonView.RPC("DestroySelf", PhotonTargets.AllBuffered);
+            PhotonNetwork.Destroy(gameObject);
         }
     }
-
-
 }
